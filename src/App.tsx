@@ -1,24 +1,43 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { FormEvent, useRef } from "react";
+import Input from "./components/Input";
+import Modal, { ModalHandles } from "./components/Modal";
 
 function App() {
+  const nameInputRef = useRef<HTMLInputElement>(null);
+  const acceptTermsRef = useRef({ value: false });
+  const modalRef = useRef<ModalHandles>(null);
+
+  const handleSubmit = (e: FormEvent) => {
+    e.preventDefault();
+    console.log(nameInputRef.current?.value);
+    console.log(acceptTermsRef.current?.value);
+  };
+
+  const handleOpenModal = () => {
+    modalRef.current?.openModal();
+  };
+
+  const handleAcceptTerms = () => {
+    acceptTermsRef.current.value = !acceptTermsRef.current.value;
+  };
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div>
+      <form onSubmit={handleSubmit}>
+        <Input name="name" label="Nome completo" ref={nameInputRef} />
+
+        <button type="submit" onClick={handleSubmit}>
+          Enviar
+        </button>
+
+        <button onClick={handleAcceptTerms} type="button">
+          Aceitar termos
+        </button>
+      </form>
+
+      <button onClick={handleOpenModal}>Abrir Modal</button>
+
+      <Modal ref={modalRef} />
     </div>
   );
 }
